@@ -2,6 +2,12 @@ package builder;
 
 // Assumption: User class is immutable. Age, phone, address is optional
 
+import com.google.common.base.Preconditions;
+
+
+/**
+ * Created by Michał Gębarowski on 31/07/2018
+ */
 public class User {
     private final String firstName;
     private final String lastName;
@@ -66,6 +72,8 @@ public class User {
         }
 
         public User build() {
+            User user = new User(this);
+            Preconditions.checkArgument(user.getAge() < 120 && user.getAge() >= 0, "Age out of range");
             return new User(this);
         }
     }
