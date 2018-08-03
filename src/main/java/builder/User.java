@@ -2,7 +2,8 @@ package builder;
 
 // Assumption: User class is immutable. Age, phone, address is optional
 
-import com.google.common.base.Preconditions;
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 
 /**
@@ -52,11 +53,12 @@ public class User {
         private String address;
 
         public UserBuilder(String firstName, String lastName) {
-            this.firstName = firstName;
-            this.lastName = lastName;
+            this.firstName = checkNotNull(firstName, "First name cannot be null");
+            this.lastName = checkNotNull(lastName, "Last name cannot be null");
         }
 
         public UserBuilder setAge(int age) {
+            checkArgument(age < 120 && age >= 0, "Age out of range");
             this.age = age;
             return this;
         }
@@ -72,8 +74,6 @@ public class User {
         }
 
         public User build() {
-            User user = new User(this);
-            Preconditions.checkArgument(user.getAge() < 120 && user.getAge() >= 0, "Age out of range");
             return new User(this);
         }
     }

@@ -2,8 +2,7 @@ package builder;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Created by Michał Gębarowski on 1/08/2018
@@ -13,7 +12,7 @@ public class UserTest {
     private User user;
 
     @Test
-    public void createAll() {
+    public void testCreateAll() {
         user = new User.UserBuilder("Michal", "Gebarowski")
                 .setAddress("Coronet House")
                 .setAge(20)
@@ -29,24 +28,22 @@ public class UserTest {
     }
 
     @Test
-    public void createFinal() {
-        user = new User.UserBuilder("Michal", "Gebarowski").build();
-        assertAll(
-                () -> assertEquals("Michal", user.getFirstName()),
-                () -> assertEquals("Gebarowski", user.getLastName()),
-                () -> assertEquals(null, user.getAddresss()),
-                () -> assertEquals(0, user.getAge()),
-                () -> assertEquals(null, user.getPhone())
-        );
+    public void testMissingFirstName() {
+        assertThrows(NullPointerException.class, () -> new User.UserBuilder(null, "Gebarowski").build());
     }
 
     @Test
-    public void setNegativeAge() {
-
+    public void testMissingLastName() {
+        assertThrows(NullPointerException.class, () -> new User.UserBuilder("Michal", null).build());
     }
 
     @Test
-    public void setAgeAboveLimit() {
+    public void testNegativeAge() {
+        assertThrows(IllegalArgumentException.class, () -> new User.UserBuilder("Michal", "Gebarowski").setAge(-1).build());
+    }
 
+    @Test
+    public void testAgeAboveLimit() {
+        assertThrows(IllegalArgumentException.class, () -> new User.UserBuilder("Michal", "Gebarowski").setAge(120).build());
     }
 }
